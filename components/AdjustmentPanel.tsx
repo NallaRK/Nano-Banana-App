@@ -8,7 +8,7 @@ import { EnhanceQualityIcon } from './icons';
 
 interface AdjustmentPanelProps {
   onApplyAdjustment: (prompt: string) => void;
-  onEnhanceQuality: () => void;
+  onEnhanceQuality?: () => void; // Made optional
   isLoading: boolean;
 }
 
@@ -37,7 +37,7 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({ onApplyAdjustment, on
     setCustomPrompt('');
   };
 
-  const handleCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustomChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCustomPrompt(e.target.value);
     setSelectedPresetPrompt(null);
   };
@@ -50,30 +50,34 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({ onApplyAdjustment, on
 
   return (
     <div className="w-full bg-gray-800/50 border border-gray-700 rounded-lg p-4 flex flex-col gap-4 animate-fade-in backdrop-blur-sm">
-      <div className="flex flex-col md:flex-row items-center gap-4 p-4 bg-black/20 rounded-lg">
-        <div className="flex-shrink-0 text-cyan-300">
-          <EnhanceQualityIcon className="w-10 h-10" />
-        </div>
-        <div className="flex-grow text-center md:text-left">
-          <h3 className="text-lg font-semibold text-gray-200">Enhance Quality</h3>
-          <p className="text-sm text-gray-400">
-            Intelligently upscale resolution, reduce noise, and sharpen details.
-          </p>
-        </div>
-        <button
-          onClick={onEnhanceQuality}
-          disabled={isLoading}
-          className="w-full md:w-auto flex-shrink-0 bg-gradient-to-br from-cyan-600 to-cyan-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-cyan-800 disabled:to-cyan-700 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
-        >
-          Enhance
-        </button>
-      </div>
+      {onEnhanceQuality && (
+        <>
+            <div className="flex flex-col md:flex-row items-center gap-4 p-4 bg-black/20 rounded-lg">
+                <div className="flex-shrink-0 text-cyan-300">
+                <EnhanceQualityIcon className="w-10 h-10" />
+                </div>
+                <div className="flex-grow text-center md:text-left">
+                <h3 className="text-lg font-semibold text-gray-200">Enhance Quality</h3>
+                <p className="text-sm text-gray-400">
+                    Intelligently upscale resolution, reduce noise, and sharpen details.
+                </p>
+                </div>
+                <button
+                onClick={onEnhanceQuality}
+                disabled={isLoading}
+                className="w-full md:w-auto flex-shrink-0 bg-gradient-to-br from-cyan-600 to-cyan-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-cyan-800 disabled:to-cyan-700 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
+                >
+                Enhance
+                </button>
+            </div>
 
-      <div className="relative flex py-2 items-center">
-        <div className="flex-grow border-t border-gray-600"></div>
-        <span className="flex-shrink mx-4 text-gray-400 font-semibold">OR</span>
-        <div className="flex-grow border-t border-gray-600"></div>
-      </div>
+            <div className="relative flex py-2 items-center">
+                <div className="flex-grow border-t border-gray-600"></div>
+                <span className="flex-shrink mx-4 text-gray-400 font-semibold">OR</span>
+                <div className="flex-grow border-t border-gray-600"></div>
+            </div>
+        </>
+      )}
       
       <div className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold text-center text-gray-300 -mt-2">Apply a Studio Lighting Preset</h3>
@@ -108,13 +112,13 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({ onApplyAdjustment, on
       </div>
 
 
-      <input
-        type="text"
+      <textarea
         value={customPrompt}
         onChange={handleCustomChange}
         placeholder="Or describe a custom adjustment..."
-        className="flex-grow bg-gray-800 border border-gray-600 text-gray-200 rounded-lg p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60 text-base"
+        className="flex-grow bg-gray-800 border border-gray-600 text-gray-200 rounded-lg p-4 focus:ring-2 focus:ring-blue-500 focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60 text-base resize-y"
         disabled={isLoading}
+        rows={3}
       />
 
       {activePrompt && (
